@@ -9,7 +9,7 @@ class NaviBar extends StatelessWidget {
         child: ListView(children: [
       UserAccountsDrawerHeader(
           accountName: Text('早渕RF'),
-          accountEmail: Text('xxx@yahoo.co.jp'),
+          accountEmail: Text('TEST'),
           currentAccountPicture: CircleAvatar(
               child: ClipOval(
             child: Image.asset(

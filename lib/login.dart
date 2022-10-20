@@ -1,18 +1,19 @@
-import 'package:cardispatch/authError.dart';
-import 'package:cardispatch/main.dart';
-import 'package:cardispatch/naviBar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
+import 'package:cardispatch/RegisterPage.dart';
+import 'package:cardispatch/mainMenu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:cardispatch/authError.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
+  final String title = '';
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPageState extends State<LoginPage> {
   // メッセージ表示用
   String infoText = '';
   // 入力したメールアドレス・パスワード
@@ -25,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NaviBar(),
+      //drawer: NaviBar(),
       body: Center(
         child: Container(
           alignment: Alignment.center,
@@ -100,21 +101,19 @@ class _RegisterPageState extends State<RegisterPage> {
                     width: 150,
                     // ユーザー登録ボタン
                     child: ElevatedButton(
-                      child: const Text('ユーザ登録'),
+                      child: const Text('ログイン'),
                       onPressed: () async {
                         try {
                           // メール/パスワードでユーザ登録
                           final FirebaseAuth auth = FirebaseAuth.instance;
-                          await auth.createUserWithEmailAndPassword(
+                          await auth.signInWithEmailAndPassword(
                             email: email,
                             password: password,
                           );
-
                           // ユーザー登録に成功した場合
                           await Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (context) {
-                              infoText = '登録が成功しました。ログインページからログインしてください。';
-                              return MyApp();
+                              return MainMenu();
                             }),
                           );
                         } catch (e) {
@@ -129,40 +128,39 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'ログイン画面へ戻る',
-                        style: linkStyle,
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () async {
-                            await Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) {
-                                return MyApp();
-                              }),
-                            );
-                          },
-                      ),
+                    child: Row(
+                      children: [
+                        const Center(
+                            child: Center(
+                                child: Padding(
+                          padding: EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            'アカウントお持ちではない場合',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromARGB(255, 97, 97, 97)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ))),
+                        RichText(
+                          text: TextSpan(
+                            text: 'ユーザ登録へ',
+                            style: linkStyle,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                await Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (context) {
+                                    return const RegisterPage();
+                                  }),
+                                );
+                              },
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                        ),
+                      ],
                     ),
-                  ),
-                  /*Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        child: const Text('ログイン画面へ戻る'),
-                        onPressed: () async {
-                          await Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) {
-                              return const MyApp();
-                            }),
-                          );
-                        },
-                      ),
-                    ),
-                  ),*/
-
-                  Container(
-                    padding: const EdgeInsets.all(8),
                   ),
                 ],
               ),

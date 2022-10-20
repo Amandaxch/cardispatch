@@ -7,89 +7,13 @@ import 'package:cardispatch/naviBar.dart';
 
 enum RadioValue { FIRST, SECOND }
 
-void dispose(Widget wg) {}
-Widget setWidgetName(Widget wg, bool empty) {
-  if (empty == true) {
-    Future.delayed(const Duration(milliseconds: 50)).then((value) {
-      return Container(
-        width: MEM_BOX_W,
-        height: MEM_BOX_H,
-        margin: const EdgeInsets.fromLTRB(10.0, 0, 0, 2),
-        color: Colors.grey[400],
-        child: Center(
-            child: Text('',
-                style: const TextStyle(fontSize: 15, color: Colors.grey))),
-      );
-    });
-  } else {
-    return Container();
-  }
-  throw '';
-}
-
-Widget buildWidgets(
-  dynamic BuildContext, {
-  required String text,
-  required String syusekiFlg,
-}) {
-  String acceptedData = '空き'; // 受け側のデータ
-  bool willAccepted = false; // Target範囲内かどうかのフラグ
-  bool empty = true; //空席
-  int grade = 99;
-  //const IconData sports_baseball_outlined = IconData(0xf3c7, fontFamily: 'MaterialIcons');
-  return SizedBox(
-      width: CAR_SEAT_W,
-      height: CAR_SEAT_H,
-      child: DragTarget(
-        builder: (context, candidateData, rejectedData) {
-          return Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: willAccepted ? Colors.blue : Colors.grey,
-                width: willAccepted ? 3 : 1,
-              ),
-              color: colorMap[grade],
-            ),
-            margin: const EdgeInsets.all(1.0),
-            width: CAR_SEAT_W,
-            height: CAR_SEAT_H,
-            child: Center(
-                child:
-                    Text(acceptedData, style: const TextStyle(fontSize: 12))),
-          );
-        },
-        onWillAccept: (data) {
-          willAccepted = true;
-          if (acceptedData == '空き') {
-            return true;
-          } else {
-            return false;
-          }
-        },
-        onAccept: (List data) {
-          if (data[0] == MEMBER_KBN_BOY) {
-            acceptedData = allMembers[data[1]].name;
-            grade = allMembers[data[1]].grade;
-          } else if (data[0] == MEMBER_KBN_PAR) {
-            acceptedData = allParents[data[1]].name;
-            grade = allParents[data[1]].grade;
-          }
-          willAccepted = false;
-          empty = false;
-        },
-        onLeave: (data) {
-          willAccepted = false;
-        },
-      ));
-}
-
 // class HaisyaPage extends StatefulWidget {
 // ステートクラス
 class HaisyaPage extends StatefulWidget {
-  HaisyaPage({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const HaisyaPage({super.key});
+
   @override
-  _HaisyaPageState createState() => new _HaisyaPageState();
+  State<HaisyaPage> createState() => new _HaisyaPageState();
 }
 
 class _HaisyaPageState extends State<HaisyaPage> {
@@ -416,4 +340,80 @@ class _HaisyaPageState extends State<HaisyaPage> {
   void setWidgetTool() {}
 
   void addHaisya() {}
+}
+
+void dispose(Widget wg) {}
+Widget setWidgetName(Widget wg, bool empty) {
+  if (empty == true) {
+    Future.delayed(const Duration(milliseconds: 50)).then((value) {
+      return Container(
+        width: MEM_BOX_W,
+        height: MEM_BOX_H,
+        margin: const EdgeInsets.fromLTRB(10.0, 0, 0, 2),
+        color: Colors.grey[400],
+        child: Center(
+            child: Text('',
+                style: const TextStyle(fontSize: 15, color: Colors.grey))),
+      );
+    });
+  } else {
+    return Container();
+  }
+  throw '';
+}
+
+Widget buildWidgets(
+  dynamic BuildContext, {
+  required String text,
+  required String syusekiFlg,
+}) {
+  String acceptedData = '空き'; // 受け側のデータ
+  bool willAccepted = false; // Target範囲内かどうかのフラグ
+  bool empty = true; //空席
+  int grade = 99;
+  //const IconData sports_baseball_outlined = IconData(0xf3c7, fontFamily: 'MaterialIcons');
+  return SizedBox(
+      width: CAR_SEAT_W,
+      height: CAR_SEAT_H,
+      child: DragTarget(
+        builder: (context, candidateData, rejectedData) {
+          return Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: willAccepted ? Colors.blue : Colors.grey,
+                width: willAccepted ? 3 : 1,
+              ),
+              color: colorMap[grade],
+            ),
+            margin: const EdgeInsets.all(1.0),
+            width: CAR_SEAT_W,
+            height: CAR_SEAT_H,
+            child: Center(
+                child:
+                    Text(acceptedData, style: const TextStyle(fontSize: 12))),
+          );
+        },
+        onWillAccept: (data) {
+          willAccepted = true;
+          if (acceptedData == '空き') {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        onAccept: (List data) {
+          if (data[0] == MEMBER_KBN_BOY) {
+            acceptedData = allMembers[data[1]].name;
+            grade = allMembers[data[1]].grade;
+          } else if (data[0] == MEMBER_KBN_PAR) {
+            acceptedData = allParents[data[1]].name;
+            grade = allParents[data[1]].grade;
+          }
+          willAccepted = false;
+          empty = false;
+        },
+        onLeave: (data) {
+          willAccepted = false;
+        },
+      ));
 }

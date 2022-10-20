@@ -4,6 +4,7 @@ import 'package:cardispatch/RegisterPage.dart';
 import 'package:cardispatch/authError.dart';
 import 'package:cardispatch/carReg.dart';
 import 'package:cardispatch/haisya.dart';
+import 'package:cardispatch/login.dart';
 import 'package:cardispatch/mainMenu.dart';
 import 'package:cardispatch/memReg.dart';
 import 'package:cardispatch/report.dart';
@@ -13,6 +14,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() async {
@@ -28,25 +30,97 @@ void main() async {
         measurementId: "G-Y45DXELGF0"),
   );
   setUrlStrategy(PathUrlStrategy());
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: '少年野球・サッカー配車Webアプリ',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ja'),
+      ],
+      title: '少年野球・サッカー配車Webアプリ',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      routes: {
+        '/': (context) => const LoginPage(),
+        '/login': (context) => const LoginPage(),
+        '/regis': (context) => const RegisterPage(),
+        '/mainMenu': (context) => MainMenu(),
+        '/haisya': (context) => HaisyaPage(),
+        '/todo': (context) => TodoPage(title: '作成中'),
+        '/scheduleReg': (context) => const ScheduleRegPage(),
+        '/memReg': (context) => MemberRegPage(title: '部員登録'),
+        '/carReg': (context) => CarRegPage(title: '車登録'),
+        '/report': (context) => ReportPage(title: '清算'),
+      },
+    );
+  }
+}
+
+class TopPage extends StatelessWidget {
+  const TopPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Topページ'),
+      ),
+      body: SafeArea(
+        bottom: false,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                child: Text(
+                  'ログインページへ',
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+              ),
+              SizedBox(
+                width: 40,
+              ),
+              TextButton(
+                child: Text(
+                  'ユーザ登録へ',
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/regis');
+                },
+              ),
+            ],
+          ),
         ),
-        initialRoute: '/',
+      ),
+    );
+  }
+}
+      /*initialRoute: '/',
         routes: {
           // 初期画面のclassを指定
-          '/': (context) => const MyWidget(),
-          // 次ページのclassを指定
+          '/': (context) => LoginPage(),
+          // 次ページのclassを指定*/
 /*
           '/mainMenu': (context) => MainMenu(),
           '/haisya': (context) => HaisyaPage(title: '配車'),
@@ -54,23 +128,18 @@ class MyApp extends StatelessWidget {
           '/scheduleReg': (context) => ScheduleRegPage(title: '配車日程登録'),
           '/memReg': (context) => MemberRegPage(title: '部員登録'),
           '/carReg': (context) => CarRegPage(title: '車登録'),
-          '/report': (context) => ReportPage(title: '清算'),*/
-        });
+          '/report': (context) => ReportPage(title: '清算'),
+    );
   }
 }
+*/
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
-  @override
-  _MyWidgetState createState() => _MyWidgetState();
-}
-
-class _MyWidgetState extends State<MyWidget> {
-  // メッセージ表示用
+  /*
   String infoText = '';
   // 入力したメールアドレス・パスワード
   String email = '';
   String password = '';
+  String userName = '';
   TextStyle linkStyle = const TextStyle(color: Colors.blue, fontSize: 12);
   final auth_error = Authentication_error_to_ja();
 
@@ -121,10 +190,10 @@ class _MyWidgetState extends State<MyWidget> {
                 SizedBox(
                   width: 250,
                   child: TextFormField(
-                    decoration: const InputDecoration(
-                        labelText: 'メールアドレス', border: OutlineInputBorder()),
+                    decoration: const InputDecoration(labelText: 'メールアドレス'),
                     onChanged: (String value) {
                       setState(() {
+                        print("mail onChanged()");
                         email = value;
                       });
                     },
@@ -142,6 +211,7 @@ class _MyWidgetState extends State<MyWidget> {
                       onChanged: (String value) {
                         setState(() {
                           password = value;
+                          debugPrint("password onChanged()");
                         });
                       },
                     ),
@@ -153,45 +223,50 @@ class _MyWidgetState extends State<MyWidget> {
                   child: Text(infoText,
                       style: const TextStyle(fontSize: 12, color: Colors.red)),
                 ),
-                ElevatedButton(
-                  child: const Text('ログイン'),
-                  onPressed: () async {
-                    try {
-                      // メール/パスワードでログイン
-                      final FirebaseAuth auth = FirebaseAuth.instance;
-                      UserCredential _result =
-                          await auth.signInWithEmailAndPassword(
-                        email: email,
-                        password: password,
-                      );
-                      // ログイン成功
-                      User _user = _result.user!; // ログインユーザーのIDを取得
+                Builder(builder: (context) {
+                  return ElevatedButton(
+                    child: const Text('ログイン'),
+                    onPressed: () async {
+                      try {
+                        // メール/パスワードでログイン
 
-                      // Email確認が済んでいる場合のみHome画面へ
-                      /*if (_user.emailVerified) {
-                        debugPrint("CARDISPATCH_user email verified");
-                        await Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(
-                          builder: (context) => MainMenu(),
-                          //Home(user_id: _user.uid, auth: _auth),
-                        ));
+                        debugPrint('login email:: $email');
+                        debugPrint('login password:: $password');
+                        final FirebaseAuth auth = FirebaseAuth.instance;
+                        UserCredential _result =
+                            await auth.signInWithEmailAndPassword(
+                          email: email,
+                          password: password,
+                        );
+                        // ログイン成功
+                        User _user = _result.user!; // ログインユーザーのIDを取得
+
+                        // Email確認が済んでいる場合のみHome画面へ
+                        /*if (_user.emailVerified) {
+                            debugPrint("CARDISPATCH_user email verified");
+                            await Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (context) => MainMenu(),
+                              //Home(user_id: _user.uid, auth: _auth),
+                            ));
+                          }
+                          */
+
+                        /*
+                          await Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => MainMenu()),
+                          );
+                          */
+                      } catch (e) {
+                        // ユーザー登録に失敗した場合
+                        setState(() {
+                          infoText = auth_error.register_error_msg(
+                              e.hashCode, e.toString());
+                        });
                       }
-                      */
-
-                      /*
-                      await Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => MainMenu()),
-                      );
-                      */
-                    } catch (e) {
-                      // ユーザー登録に失敗した場合
-                      setState(() {
-                        infoText = auth_error.register_error_msg(
-                            e.hashCode, e.toString());
-                      });
-                    }
-                  },
-                ),
+                    },
+                  );
+                }),
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Row(children: [
@@ -230,4 +305,5 @@ class _MyWidgetState extends State<MyWidget> {
       ),
     );
   }
-}
+  */
+

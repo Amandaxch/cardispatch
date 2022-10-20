@@ -6,10 +6,10 @@ import 'package:cardispatch/naviBar.dart';
 // class ScheduleRegPage extends StatefulWidget {
 // ステートクラス
 class ScheduleRegPage extends StatefulWidget {
-  ScheduleRegPage({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const ScheduleRegPage({super.key});
+
   @override
-  _ScheduleRegPageState createState() => _ScheduleRegPageState();
+  State<ScheduleRegPage> createState() => _ScheduleRegPageState();
 }
 
 class _ScheduleRegPageState extends State<ScheduleRegPage> {

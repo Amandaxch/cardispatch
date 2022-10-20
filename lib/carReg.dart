@@ -62,8 +62,9 @@ class _CarRegPageState extends State<CarRegPage> {
     var dropdownButtonFormField_member = DropdownButtonFormField<String>(
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(width: 3, color: Colors.blue)),
+          borderRadius: BorderRadius.circular(12),
+          //borderSide: const BorderSide(width: 3, color: Colors.blue)
+        ),
       ),
       value: selectedItem_member,
       items: allMembers

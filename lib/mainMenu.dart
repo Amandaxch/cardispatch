@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cardispatch/data.dart';
 import 'package:cardispatch/scheduleReg.dart';
 import 'package:flutter/material.dart';
 import 'package:cardispatch/naviBar.dart';
@@ -11,114 +12,123 @@ class MainMenu extends StatelessWidget {
     //var db = FirebaseFirestore.instance;
     debugPrint("MainMenu Start");
     return Scaffold(
-        //drawer: NaviBar(),
+        drawer: NaviBar(),
         appBar: AppBar(
-          title: Text('メインメニュー'),
+          title: const Text('メインメニュー'),
         ),
-        body: GridView.count(
-          crossAxisCount: 3,
-          children: [
-            Container(
-                child: Column(children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                ),
-                onPressed: () {
-                  //Navigator.pushNamed(context));
-                  /*Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return ScheduleRegPage(
-                          title: '配車日程',
-                        );
+        body: Center(
+          child: Container(
+            width: 400,
+            height: 600,
+            decoration: BoxDecoration(
+              color: Colors.blue[50],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: GridView.count(
+                crossAxisCount: 3,
+                children: [
+                  Column(children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/scheduleReg');
                       },
+                      child: const Icon(Icons.calendar_month,
+                          size: ICON_MAINMENU_SIZE),
                     ),
-                  );*/
-                },
-                child: Icon(Icons.calendar_month, size: 80),
+                    const Text('配車日程',
+                        style: TextStyle(fontSize: ICON_MAINMENU_LAB_FONTSIZE)),
+                  ]),
+                  Column(children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/todo');
+                      },
+                      child: const Icon(Icons.question_mark_rounded,
+                          size: ICON_MAINMENU_SIZE),
+                    ),
+                    const Text('参加回答',
+                        style: TextStyle(fontSize: ICON_MAINMENU_LAB_FONTSIZE)),
+                  ]),
+                  Column(children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/haisya');
+                      },
+                      child: const Icon(Icons.car_repair,
+                          size: ICON_MAINMENU_SIZE),
+                    ),
+                    const Text('配車',
+                        style: TextStyle(fontSize: ICON_MAINMENU_LAB_FONTSIZE)),
+                  ]),
+                  Column(children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/report');
+                      },
+                      child: const Icon(Icons.calculate_outlined,
+                          size: ICON_MAINMENU_SIZE),
+                    ),
+                    const Text('清算',
+                        style: TextStyle(fontSize: ICON_MAINMENU_LAB_FONTSIZE)),
+                  ]),
+                  Column(children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/memReg');
+                      },
+                      child: const Icon(Icons.people, size: ICON_MAINMENU_SIZE),
+                    ),
+                    const Text('部員登録',
+                        style: TextStyle(fontSize: ICON_MAINMENU_LAB_FONTSIZE)),
+                  ]),
+                  Column(children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/todo');
+                      },
+                      child: const Icon(Icons.place, size: ICON_MAINMENU_SIZE),
+                    ),
+                    const Text('試合球場登録',
+                        style: TextStyle(fontSize: ICON_MAINMENU_LAB_FONTSIZE)),
+                  ]),
+                  Column(children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/carReg');
+                      },
+                      child: const Icon(Icons.car_rental,
+                          size: ICON_MAINMENU_SIZE),
+                    ),
+                    const Text('車登録',
+                        style: TextStyle(fontSize: ICON_MAINMENU_LAB_FONTSIZE)),
+                  ]),
+                ],
               ),
-              Text('配車日程', style: const TextStyle(fontSize: 18)),
-            ])),
-            Container(
-                child: Column(children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                ),
-                onPressed: () {
-                  //Navigator.pushNamed(context, '/todo');
-                },
-                child: Icon(Icons.question_mark_rounded, size: 80),
-              ),
-              Text('参加回答', style: const TextStyle(fontSize: 18)),
-            ])),
-            Container(
-                child: Column(children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                ),
-                onPressed: () {
-                  //Navigator.pushNamed(context, '/haisya');
-                },
-                child: Icon(Icons.car_repair, size: 80),
-              ),
-              Text('配車', style: const TextStyle(fontSize: 18)),
-            ])),
-            Container(
-                child: Column(children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                ),
-                onPressed: () {
-                  //Navigator.pushNamed(context, '/report');
-                },
-                child: Icon(Icons.calculate_outlined, size: 80),
-              ),
-              Text('清算', style: const TextStyle(fontSize: 18)),
-            ])),
-            Container(
-                child: Column(children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                ),
-                onPressed: () {
-                  //Navigator.pushNamed(context, '/memReg');
-                },
-                child: Icon(Icons.people, size: 80),
-              ),
-              Text('部員登録', style: const TextStyle(fontSize: 18)),
-            ])),
-            Container(
-                child: Column(children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                ),
-                onPressed: () {
-                  //Navigator.pushNamed(context, '/todo');
-                },
-                child: Icon(Icons.place, size: 80),
-              ),
-              Text('試合球場登録', style: const TextStyle(fontSize: 18)),
-            ])),
-            Container(
-                child: Column(children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                ),
-                onPressed: () {
-                  //Navigator.pushNamed(context, '/carReg');
-                },
-                child: Icon(Icons.car_rental, size: 80),
-              ),
-              Text('車登録', style: const TextStyle(fontSize: 18)),
-            ])),
-          ],
+            ),
+          ),
         ));
   }
 }

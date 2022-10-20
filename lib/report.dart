@@ -173,7 +173,6 @@ class _TableState extends State<TableSample> {
       ),
     );
     return Container(
-        width: 1200,
         alignment: Alignment.topCenter,
         child: Column(
           children: [
@@ -181,16 +180,16 @@ class _TableState extends State<TableSample> {
             Table(
                 border: TableBorder.all(),
                 columnWidths: const <int, TableColumnWidth>{
-                  0: FractionColumnWidth(0.1),
-                  1: FractionColumnWidth(0.1),
-                  2: FractionColumnWidth(0.1),
-                  3: FractionColumnWidth(0.05),
-                  4: FractionColumnWidth(0.05),
-                  5: FractionColumnWidth(0.15),
-                  6: FractionColumnWidth(0.1),
-                  7: FractionColumnWidth(0.2),
-                  8: FractionColumnWidth(0.1),
-                  9: FractionColumnWidth(0.05),
+                  0: IntrinsicColumnWidth(),
+                  1: FlexColumnWidth(1.0),
+                  2: FlexColumnWidth(1.0),
+                  3: FlexColumnWidth(1.0),
+                  4: FlexColumnWidth(1.0),
+                  5: FlexColumnWidth(1.0),
+                  6: FlexColumnWidth(1.0),
+                  7: FlexColumnWidth(1.0),
+                  8: FlexColumnWidth(1.0),
+                  9: FlexColumnWidth(1.0),
                 },
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 children: <TableRow>[

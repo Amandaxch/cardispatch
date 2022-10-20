@@ -48,9 +48,10 @@ class MainMenu extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/todo');
-                      },
+                      //onPressed: () {
+                      //  Navigator.pushNamed(context, '/todo');
+                      //},
+                      onPressed: null,
                       child: const Icon(Icons.question_mark_rounded,
                           size: ICON_MAINMENU_SIZE),
                     ),
@@ -65,6 +66,7 @@ class MainMenu extends StatelessWidget {
                       onPressed: () {
                         Navigator.pushNamed(context, '/haisya');
                       },
+                      //onPressed: null,
                       child: const Icon(Icons.car_repair,
                           size: ICON_MAINMENU_SIZE),
                     ),
@@ -90,9 +92,10 @@ class MainMenu extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/memReg');
-                      },
+                      //onPressed: () {
+                      //  Navigator.pushNamed(context, '/memReg');
+                      //},
+                      onPressed: null,
                       child: const Icon(Icons.people, size: ICON_MAINMENU_SIZE),
                     ),
                     const Text('部員登録',
@@ -103,9 +106,10 @@ class MainMenu extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/todo');
-                      },
+                      //onPressed: () {
+                      //  Navigator.pushNamed(context, '/todo');
+                      //},
+                      onPressed: null,
                       child: const Icon(Icons.place, size: ICON_MAINMENU_SIZE),
                     ),
                     const Text('試合球場登録',
@@ -116,9 +120,10 @@ class MainMenu extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/carReg');
-                      },
+                      //onPressed: () {
+                      //  Navigator.pushNamed(context, '/carReg');
+                      //},
+                      onPressed: null,
                       child: const Icon(Icons.car_rental,
                           size: ICON_MAINMENU_SIZE),
                     ),

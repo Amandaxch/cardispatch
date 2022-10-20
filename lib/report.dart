@@ -16,18 +16,79 @@ class ReportPage extends StatefulWidget {
   _ReportPageState createState() => new _ReportPageState();
 }
 
-class _ReportPageState extends State<ReportPage> {
+class PageMem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NaviBar(),
-      appBar: AppBar(
-        title: Text('清算'),
-      ),
-      body: Center(
-        child: TableSample(),
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10.0),
+          child: TableSample(),
+        )
+      ],
+    );
+  }
+}
+
+class PagePar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10.0),
+          child: TableSample(),
+        )
+      ],
+    );
+  }
+}
+
+class PageDrv extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10.0),
+          child: TableSample(),
+        )
+      ],
+    );
+  }
+}
+
+class _ReportPageState extends State<ReportPage> {
+  final List<TabInfo> _tabs = [
+    TabInfo("選手", PageMem()),
+    TabInfo("保護者", PagePar()),
+    TabInfo("ドライバー", PageDrv()),
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: _tabs.length,
+      child: Scaffold(
+        //drawer: NaviBar(),
+        appBar: AppBar(
+          title: Text('清算'),
+          bottom: PreferredSize(
+            child: TabBar(
+              isScrollable: true,
+              tabs: _tabs.map((TabInfo tab) {
+                return Tab(text: tab.label);
+              }).toList(),
+            ),
+            preferredSize: Size.fromHeight(30.0),
+          ),
+        ),
+        body: TabBarView(children: _tabs.map((tab) => tab.widget).toList()),
       ),
     );
+    //body: Center(
+    //  child: TableSample(),
+    //),
+    //);
   }
 }
 
@@ -36,6 +97,12 @@ class TableSample extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _TableState();
+}
+
+class TabInfo {
+  String label;
+  Widget widget;
+  TabInfo(this.label, this.widget);
 }
 
 class _TableState extends State<TableSample> {
@@ -108,7 +175,7 @@ class _TableState extends State<TableSample> {
     return Container(
         width: 1200,
         alignment: Alignment.topCenter,
-        child: Row(
+        child: Column(
           children: [
             dateDrumRoll,
             Table(

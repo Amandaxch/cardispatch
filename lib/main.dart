@@ -116,6 +116,8 @@ class TopPage extends StatelessWidget {
     );
   }
 }
+
+
       /*initialRoute: '/',
         routes: {
           // 初期画面のclassを指定

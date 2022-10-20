@@ -1,11 +1,11 @@
 // Firebase Authentication利用時の日本語エラーメッセージ
-const int ERRCODE_INVALID_EMAIL = 123123;
-const int ERRCODE_WRONG_PASSWORD = 123123;
-const int ERRCODE_NOT_FOUND = 123123;
+const String ERRCODE_INVALID_EMAIL = "400";
+const String ERRCODE_WRONG_PASSWORD = "123123";
+const String ERRCODE_NOT_FOUND = "123123";
 
 class Authentication_error_to_ja {
   // ログイン時の日本語エラーメッセージ
-  login_error_msg(int error_code, String org_error_msg) {
+  login_error_msg(String error_code, String org_error_msg) {
     String error_msg;
 
     if (error_code == ERRCODE_INVALID_EMAIL) {

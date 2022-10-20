@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cardispatch/RegisterPage.dart';
 import 'package:cardispatch/authError.dart';
 import 'package:cardispatch/carReg.dart';
@@ -69,16 +71,16 @@ class _MyWidgetState extends State<MyWidget> {
   // 入力したメールアドレス・パスワード
   String email = '';
   String password = '';
-  TextStyle linkStyle = const TextStyle(color: Colors.blue);
+  TextStyle linkStyle = const TextStyle(color: Colors.blue, fontSize: 12);
   final auth_error = Authentication_error_to_ja();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //drawer: NaviBar(),
-      appBar: AppBar(
-        title: const Text('ホーム'),
-      ),
+      //appBar: AppBar(
+      //  title: const Text('ホーム'),
+      //),
       body: Center(
         child: Container(
           alignment: Alignment.center,
@@ -110,7 +112,7 @@ class _MyWidgetState extends State<MyWidget> {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2.0,
                       color: Color.fromARGB(255, 1, 87, 155),
-                      fontFamily: 'Cursive',
+                      //fontFamily: 'Cursive',
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -151,55 +153,63 @@ class _MyWidgetState extends State<MyWidget> {
                   child: Text(infoText,
                       style: const TextStyle(fontSize: 12, color: Colors.red)),
                 ),
-                Container(
-                  // ログインボタン
-                  child: ElevatedButton(
-                    child: const Text('ログイン'),
-                    onPressed: () async {
-                      try {
-                        // メール/パスワードでログイン
-                        final FirebaseAuth auth = FirebaseAuth.instance;
-                        UserCredential _result =
-                            await auth.signInWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-                        // ログイン成功
-                        User _user = _result.user!; // ログインユーザーのIDを取得
+                ElevatedButton(
+                  child: const Text('ログイン'),
+                  onPressed: () async {
+                    try {
+                      // メール/パスワードでログイン
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                      UserCredential _result =
+                          await auth.signInWithEmailAndPassword(
+                        email: email,
+                        password: password,
+                      );
+                      // ログイン成功
+                      User _user = _result.user!; // ログインユーザーのIDを取得
 
-                        // Email確認が済んでいる場合のみHome画面へ
-                        //if (_user.emailVerified) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MyApp(),
-                              //Home(user_id: _user.uid, auth: _auth),
-                            ));
-                        await Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => MainMenu()),
-                        );
-                      } catch (e) {
-                        // ログインに失敗した場合
-                        setState(() {
-                          infoText = auth_error.login_error_msg(
-                              e.hashCode, e.toString());
-                        });
+                      // Email確認が済んでいる場合のみHome画面へ
+                      /*if (_user.emailVerified) {
+                        debugPrint("CARDISPATCH_user email verified");
+                        await Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(
+                          builder: (context) => MainMenu(),
+                          //Home(user_id: _user.uid, auth: _auth),
+                        ));
                       }
-                    },
-                  ),
+                      */
+
+                      /*
+                      await Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => MainMenu()),
+                      );
+                      */
+                    } catch (e) {
+                      // ユーザー登録に失敗した場合
+                      setState(() {
+                        infoText = auth_error.register_error_msg(
+                            e.hashCode, e.toString());
+                      });
+                    }
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Row(children: [
                     const Center(
                         child: Center(
-                            child: Text(
-                      'アカウントお持ちではない場合',
-                      textAlign: TextAlign.center,
+                            child: Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        'アカウントお持ちではない場合',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromARGB(255, 97, 97, 97)),
+                        textAlign: TextAlign.center,
+                      ),
                     ))),
                     RichText(
                       text: TextSpan(
-                        text: 'カウント作成',
+                        text: 'ユーザ登録へ',
                         style: linkStyle,
                         recognizer: TapGestureRecognizer()
                           ..onTap = () async {

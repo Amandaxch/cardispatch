@@ -11,7 +11,7 @@ class MainMenu extends StatelessWidget {
     //var db = FirebaseFirestore.instance;
     debugPrint("MainMenu Start");
     return Scaffold(
-        drawer: NaviBar(),
+        //drawer: NaviBar(),
         appBar: AppBar(
           title: Text('メインメニュー'),
         ),
@@ -47,7 +47,7 @@ class MainMenu extends StatelessWidget {
                   shape: CircleBorder(),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/todo');
+                  //Navigator.pushNamed(context, '/todo');
                 },
                 child: Icon(Icons.question_mark_rounded, size: 80),
               ),
@@ -60,7 +60,7 @@ class MainMenu extends StatelessWidget {
                   shape: CircleBorder(),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/haisya');
+                  //Navigator.pushNamed(context, '/haisya');
                 },
                 child: Icon(Icons.car_repair, size: 80),
               ),
@@ -73,7 +73,7 @@ class MainMenu extends StatelessWidget {
                   shape: CircleBorder(),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/report');
+                  //Navigator.pushNamed(context, '/report');
                 },
                 child: Icon(Icons.calculate_outlined, size: 80),
               ),
@@ -86,7 +86,7 @@ class MainMenu extends StatelessWidget {
                   shape: CircleBorder(),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/memReg');
+                  //Navigator.pushNamed(context, '/memReg');
                 },
                 child: Icon(Icons.people, size: 80),
               ),
@@ -99,7 +99,7 @@ class MainMenu extends StatelessWidget {
                   shape: CircleBorder(),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/todo');
+                  //Navigator.pushNamed(context, '/todo');
                 },
                 child: Icon(Icons.place, size: 80),
               ),
@@ -112,7 +112,7 @@ class MainMenu extends StatelessWidget {
                   shape: CircleBorder(),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/carReg');
+                  //Navigator.pushNamed(context, '/carReg');
                 },
                 child: Icon(Icons.car_rental, size: 80),
               ),

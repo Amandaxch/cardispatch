@@ -19,7 +19,9 @@ class _NotApprovedPageState extends State<NotApprovedPage> {
       appBar: AppBar(
         title: Text('管理者承認待ち'),
       ),
-      body: Center(child: Text('管理者承認待ち...チーム所属を確認でき次第、承認を致します。')),
+      body: Center(
+          child: Text('管理者承認待ち状態です。\nチーム所属を確認でき次第、承認を致します。',
+              style: TextStyle(fontSize: 16))),
     );
   }
 }

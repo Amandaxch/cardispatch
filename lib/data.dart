@@ -36,7 +36,7 @@ const double ICON_MAINMENU_SIZE = 60;
 const double ICON_MAINMENU_LAB_FONTSIZE = 12;
 const int MEMBER_KBN_BOY = 0;
 const int MEMBER_KBN_PAR = 1;
-String userTeamName = 'チーム名未設定';
+late String userTeamName = '未設定';
 
 List<String> gradeItems = [
   '一年生',

@@ -26,15 +26,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-        apiKey: "AIzaSyDPl3Snp2wHJV-swFnphq_CTE1x8jI79L0",
-        authDomain: "baseball-rf.firebaseapp.com",
-        projectId: "baseball-rf",
-        databaseURL:
-            "https://baseball-rf-default-rtdb.asia-southeast1.firebasedatabase.app",
-        storageBucket: "baseball-rf.appspot.com",
-        messagingSenderId: "220563805936",
-        appId: "1:220563805936:web:e2bce2dd85839938c9d435",
-        measurementId: "G-Y45DXELGF0"),
+
   );
   setUrlStrategy(PathUrlStrategy());
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,8 +52,8 @@ class _MyAppState extends State<MyApp> {
   late Future<void> _future;
   @override
   void initState() {
-    _future = iniTeams();
     super.initState();
+    _future = iniTeams();
   }
 
   Future iniTeams() async {

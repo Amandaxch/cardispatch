@@ -16,7 +16,7 @@ class NaviBar extends StatelessWidget {
           currentAccountPicture: CircleAvatar(
               child: ClipOval(
             child: Image.asset(
-              'images/car.jpg',
+              'images/logo.jpg',
               width: 90,
               height: 90,
             ),

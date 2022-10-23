@@ -5,7 +5,7 @@ import 'package:cardispatch/naviBar.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 
-int pageKbn = REPORT_PAGE_KBN_MEM;
+//int pageKbn = REPORT_PAGE_KBN_MEM;
 
 // class HaisyaPage extends StatefulWidget {
 // ステートクラス//
@@ -18,9 +18,9 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   final List<TabInfo> _tabs = [
-    TabInfo("選手", PageMem(REPORT_PAGE_KBN_MEM)),
-    TabInfo("保護者", PageMem(REPORT_PAGE_KBN_PAR)),
-    TabInfo("ドライバー", PageMem(REPORT_PAGE_KBN_DRV)),
+    TabInfo("選手", PageMem(reportPageKbn: REPORT_PAGE_KBN_MEM)),
+    TabInfo("保護者", PageMem(reportPageKbn: REPORT_PAGE_KBN_PAR)),
+    TabInfo("ドライバー", PageMem(reportPageKbn: REPORT_PAGE_KBN_DRV)),
   ];
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,8 @@ class _ReportPageState extends State<ReportPage> {
 //部員タブ
 class PageMem extends StatefulWidget {
   int reportPageKbn = 0;
-  PageMem(int report_page_kbn_mem, {super.key});
+  PageMem({required this.reportPageKbn});
+
   //final int pageKbInPara = REPORT_PAGE_KBN_MEM;
 
   @override
@@ -61,17 +62,14 @@ class PageMemState extends State<PageMem> {
   //TextEditingController _controller_month = TextEditingController(text: '2022/10');
   TextEditingController _date =
       TextEditingController(text: DateFormat.yMMM('ja').format(DateTime.now()));
-  var initialDate;
 
-  int pageKbnState = 0;
+  int pageKbn = 0;
 
-  int get reportPageKbn => pageKbnState;
-
-  //int get pageKbInPara => REPORT_PAGE_KBN_MEM;
   @override
   Widget build(BuildContext context) {
     //Tab区分値は部員の場合
-    pageKbn = reportPageKbn;
+
+    debugPrint('Page 区分:$pageKbn');
 
     var enabled;
     return Column(
@@ -118,8 +116,12 @@ class PageMemState extends State<PageMem> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 10, 0, 0),
-                child: TableForm(
-                  pageKbn,
+                child: Container(
+                  color: Colors.blue.shade50,
+                  alignment: Alignment.topLeft,
+                  child: TableForm(
+                    pageKbn,
+                  ),
                 ),
               ),
             ],
@@ -171,9 +173,11 @@ class TabInfo {
 }
 
 class _TableFormState extends State<TableForm> {
+  int kbn = 0;
+  get pageKbn => kbn;
   @override
   Widget build(BuildContext context) {
-    switch (pageKbn) {
+    switch (kbn) {
       case REPORT_PAGE_KBN_MEM:
         return TablePageMem();
       case REPORT_PAGE_KBN_PAR:
@@ -197,7 +201,7 @@ class TablePagePar extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: Column(
           children: [
-            const TableContentPar(),
+            TableContentPar(),
           ],
         ));
   }
@@ -212,7 +216,7 @@ class TablePageMem extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: Column(
           children: [
-            const TableContentMember(),
+            TableContentMember(),
           ],
         ));
   }
@@ -229,7 +233,7 @@ class TablePageDrv extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: Column(
           children: [
-            const TableContentDrv(),
+            TableContentDrv(),
           ],
         ));
   }
@@ -334,18 +338,22 @@ class TableContentDrv extends StatelessWidget {
 TableRow buildRow(List<String> cells, {required bool isHeader}) => TableRow(
       children: cells.map((cell) {
         final style = TextStyle(
-          fontWeight: isHeader ? FontWeight.bold : FontWeight.bold,
-          fontSize: 18,
-          backgroundColor: isHeader ? Colors.blue : Colors.grey.shade100,
-          color: isHeader ? Colors.grey.shade50 : Colors.black87,
+          fontSize: 12,
+          fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
         );
-        return Padding(
-          padding: const EdgeInsets.all(12),
-          child: Center(
-              child: Text(
-            cell,
-            style: style,
-          )),
+        return Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(2),
+              child: Center(
+                  child: Container(
+                child: Text(
+                  cell,
+                  style: style,
+                ),
+              )),
+            )
+          ],
         );
       }).toList(),
     );

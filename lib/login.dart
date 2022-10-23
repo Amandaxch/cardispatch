@@ -1,6 +1,8 @@
 import 'package:cardispatch/RegisterPage.dart';
 import 'package:cardispatch/main.dart';
 import 'package:cardispatch/mainMenu.dart';
+import 'package:cardispatch/notApproved.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:cardispatch/authError.dart';
@@ -145,13 +147,29 @@ class _LoginPageState extends State<LoginPage> {
 
                             _showErrorDialog(context, errorMessage);
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Login successful')));
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MainMenu()));
+                            String uid = auth.currentUser!.uid;
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc('$uid')
+                                .get()
+                                .then(
+                              (event) {
+                                bool approved = event.get('approved');
+                                if (approved) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MainMenu()));
+                                } else {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => NotApprovedPage(
+                                                title: '承認待ち',
+                                              )));
+                                }
+                              },
+                            );
                           }
                         },
                       ),

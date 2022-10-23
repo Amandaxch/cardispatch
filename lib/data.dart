@@ -11,15 +11,23 @@ enum PlayerType {
   ob,
 }
 
+//清算ページのタブ区分
+const REPORT_PAGE_KBN_MEM = 0; //部員
+const REPORT_PAGE_KBN_PAR = 1; //保護者
+const REPORT_PAGE_KBN_DRV = 2; //ドライバー
+
+const double INPUT_TEXT_HEIGHT = 50.0;
 const double CAR_SEAT_H = 40.0;
 const double CAR_SEAT_W = 70.0;
 const double MEM_BOX_H = 30.0;
 const double MEM_BOX_W = 75.0;
 const double LAB_WID_L = 80.0;
-const double FONT_SIZE = 14.0;
+const double FONT_SIZE = 12.0;
 const double BUTTON_SIZE_W = 90.0;
 const double BUTTON_SIZE_H = 35.0;
 const DROP_LIST_TEXT_INPUT_WIDTH = 150.0;
+const DROP_TEAMLIST = 200.0;
+const REG_TEAMNM_LAB_W = 100.0;
 const DROP_LIST_TEXT_INPUT_WIDTH_WIDE = 300.0;
 const DROP_LIST_TEXT_INPUT_WIDTH_MAXWIDE = 500.0;
 
@@ -28,6 +36,7 @@ const double ICON_MAINMENU_SIZE = 60;
 const double ICON_MAINMENU_LAB_FONTSIZE = 12;
 const int MEMBER_KBN_BOY = 0;
 const int MEMBER_KBN_PAR = 1;
+String userTeamName = 'チーム名未設定';
 
 List<String> gradeItems = [
   '一年生',
@@ -98,6 +107,17 @@ class Schedule {
     required this.schNm,
   });
 }
+
+class Team {
+  String teamNo;
+  String teamName;
+  Team({
+    required this.teamNo,
+    required this.teamName,
+  });
+}
+
+List<Team> teams = [];
 
 class Member {
   int grade = 9999;

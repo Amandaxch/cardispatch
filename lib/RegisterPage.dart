@@ -1,6 +1,8 @@
 import 'package:cardispatch/authError.dart';
+import 'package:cardispatch/data.dart';
 import 'package:cardispatch/main.dart';
 import 'package:cardispatch/naviBar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -19,18 +21,93 @@ class _RegisterPageState extends State<RegisterPage> {
   String email = '';
   String password = '';
   String userName = '';
-  final auth_error = Authentication_error_to_ja();
+
+  //final auth_error = Authentication_error_to_ja();
   TextStyle linkStyle = const TextStyle(color: Colors.blue, fontSize: 12);
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController ControllerTeam = TextEditingController(text: '');
+
+    String? selectedTeamNo;
+    var _text = 'チームを選択';
+
+    /*for (int i = 0; i < teams.length; i++) {
+      print(
+          'teamList get teamno:$teams[$i].teamNo; teamname:$teams[$i].teamName');
+    }*/
+    var dropdownButtonFormField_teams = DropdownButtonFormField<String>(
+      decoration: const InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+          enabledBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+          border:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue, width: 2.0),
+          )),
+      // enabledBorder: OutlineInputBorder(
+      //   borderRadius: BorderRadius.circular(12),
+      // borderSide: const BorderSide(width: 1)),
+
+      items: teams
+          .map((item) => DropdownMenuItem<String>(
+                value: item.teamNo,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 2.0),
+                  child: Text(item.teamName,
+                      style: const TextStyle(fontSize: FONT_SIZE)),
+                ),
+              ))
+          .toList(),
+      onChanged: (item) => setState(() {
+        selectedTeamNo = item;
+      }),
+    );
+    var teamPullDown = Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 8),
+          child: Container(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: REG_TEAMNM_LAB_W,
+              child: Text(
+                'チームを選択',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  color: Color(0xFFF44336),
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: DROP_TEAMLIST,
+          child: dropdownButtonFormField_teams,
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 20.0),
+          child: Container(
+            child: Text(
+              '※所属チームがリストにない場合、アプリ管理者にご連絡ください。',
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.red.shade300,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
     return Scaffold(
       drawer: NaviBar(),
       body: Center(
         child: Container(
           alignment: Alignment.center,
           width: 400,
-          height: 600,
+          height: 650,
           decoration: BoxDecoration(
             color: Colors.blue[50],
             borderRadius: BorderRadius.circular(12),
@@ -50,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     textAlign: TextAlign.center,
                   ),
                   const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 20, 0, 100),
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 50),
                     child: Text(
                       '配車支援Webアプリ',
                       style: TextStyle(
@@ -94,9 +171,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     // メッセージ表示
                     child: Text(infoText,
                         style:
-                            const TextStyle(fontSize: 12, color: Colors.red)),
+                            const TextStyle(fontSize: 10, color: Colors.red)),
                   ),
-                  Container(
+                  teamPullDown,
+                  SizedBox(
                     width: 150,
                     // ユーザー登録ボタン
                     child: ElevatedButton(
@@ -109,19 +187,31 @@ class _RegisterPageState extends State<RegisterPage> {
                             email: email,
                             password: password,
                           );
+                          String? docId = auth.currentUser!.uid;
+                          FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(docId)
+                              .set(
+                            {
+                              'teamNo': selectedTeamNo,
+                              'approved': false,
+                              'email': email,
+                            },
+                          );
 
                           // ユーザー登録に成功した場合
                           await Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (context) {
                               infoText = '登録が成功しました。ログインページからログインしてください。';
-                              return MyApp();
+                              return const MyApp();
                             }),
                           );
                         } catch (e) {
                           // ユーザー登録に失敗した場合
                           setState(() {
-                            infoText = auth_error.register_error_msg(
-                                e.hashCode, e.toString());
+                            infoText = '登録失敗';
+                            //auth_error.register_error_msg(
+                            //    e.hashCode, e.toString());
                           });
                         }
                       },
@@ -137,32 +227,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           ..onTap = () async {
                             await Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (context) {
-                                return MyApp();
+                                return const MyApp();
                               }),
                             );
                           },
                       ),
                     ),
-                  ),
-                  /*Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        child: const Text('ログイン画面へ戻る'),
-                        onPressed: () async {
-                          await Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) {
-                              return const MyApp();
-                            }),
-                          );
-                        },
-                      ),
-                    ),
-                  ),*/
-
-                  Container(
-                    padding: const EdgeInsets.all(8),
                   ),
                 ],
               ),

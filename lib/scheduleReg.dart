@@ -15,11 +15,13 @@ class ScheduleRegPage extends StatefulWidget {
 class _ScheduleRegPageState extends State<ScheduleRegPage> {
   @override
   Widget build(BuildContext context) {
+    //チーム
     var dropdownButtonFormField_team = DropdownButtonFormField<String>(
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(width: 3, color: Colors.blue)),
+          borderRadius: BorderRadius.circular(12),
+          //borderSide: const BorderSide(width: 3, color: Colors.blue)
+        ),
       ),
       value: selectedItem_t,
       items: teamItems
@@ -36,13 +38,14 @@ class _ScheduleRegPageState extends State<ScheduleRegPage> {
         () => selectedItem_t = item,
       ),
     );
-    var dropdownButtonFormField_ground = DropdownButtonFormField<String>(
+    //出発球場
+    var dropdownButtonFormField_ground_from = DropdownButtonFormField<String>(
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(width: 3, color: Colors.blue)),
       ),
-      value: selectedItem_g,
+      value: selectedItem_g_from,
       items: groundItems
           .map((item) => DropdownMenuItem<String>(
                 value: item,
@@ -54,14 +57,38 @@ class _ScheduleRegPageState extends State<ScheduleRegPage> {
               ))
           .toList(),
       onChanged: (item) => setState(
-        () => selectedItem_game = item,
+        () => selectedItem_g_from = item,
       ),
     );
+    var dropdownButtonFormField_ground_to = DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          //borderSide: const BorderSide(width: 3, color: Colors.blue)
+        ),
+      ),
+      value: selectedItem_g_to,
+      items: groundItems
+          .map((item) => DropdownMenuItem<String>(
+                value: item,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child:
+                      Text(item, style: const TextStyle(fontSize: FONT_SIZE)),
+                ),
+              ))
+          .toList(),
+      onChanged: (item) => setState(
+        () => selectedItem_g_to = item,
+      ),
+    );
+    //試合区分
     var dropdownButtonFormField_game = DropdownButtonFormField<String>(
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(width: 3, color: Colors.blue)),
+          borderRadius: BorderRadius.circular(12),
+          //borderSide: const BorderSide(width: 3, color: Colors.blue)
+        ),
       ),
       value: selectedItem_game,
       items: gameItems
@@ -75,148 +102,164 @@ class _ScheduleRegPageState extends State<ScheduleRegPage> {
               ))
           .toList(),
       onChanged: (item) => setState(
-        () => selectedItem_t = item,
+        () => selectedItem_game = item,
       ),
     );
 
     var teamListPullDown = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(children: [
-        const SizedBox(
-          width: LAB_WID_L,
-          child: Text(
-            'チーム',
-            textAlign: TextAlign.left,
-          ),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: SizedBox(
-            width: DROP_LIST_TEXT_INPUT_WIDTH,
-            child: dropdownButtonFormField_team,
-          ),
-        ),
-      ]),
-    );
-    var groundPullDown = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(children: [
-        const SizedBox(
-          width: LAB_WID_L,
-          child: Text(
-            '出発',
-            textAlign: TextAlign.left,
-          ),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: SizedBox(
-            width: DROP_LIST_TEXT_INPUT_WIDTH_WIDE,
-            child: dropdownButtonFormField_ground,
-          ),
-        ),
-      ]),
-    );
-    var groundPullDown_to = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(children: [
-        const SizedBox(
-          width: LAB_WID_L,
-          child: Text(
-            '到着',
-            textAlign: TextAlign.left,
-          ),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: SizedBox(
-            width: DROP_LIST_TEXT_INPUT_WIDTH_WIDE,
-            child: dropdownButtonFormField_ground,
-          ),
-        ),
-      ]),
-    );
-    var gameListPullDown = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(children: [
-        const SizedBox(
-          width: LAB_WID_L,
-          child: Text(
-            '試合区分',
-            textAlign: TextAlign.left,
-          ),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: SizedBox(
-            width: DROP_LIST_TEXT_INPUT_WIDTH_WIDE,
-            child: dropdownButtonFormField_game,
-          ),
-        ),
-      ]),
-    );
-    var dateDrumRoll = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Container(
+        height: INPUT_TEXT_HEIGHT,
+        child: Row(children: [
           const SizedBox(
             width: LAB_WID_L,
             child: Text(
-              '移動日',
-              style: TextStyle(fontSize: FONT_SIZE),
+              'チーム',
               textAlign: TextAlign.left,
             ),
           ),
           Align(
             alignment: Alignment.topLeft,
             child: SizedBox(
-              width: DATE_TEXT_INPUT_WIDTH,
-              child: TextField(
-                controller: _date,
-                textInputAction: TextInputAction.next,
-                enabled: enabled,
-                //initialValue: '2022/10/15',
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  //hintText: '日付',
-                  // inputの端にカレンダーアイコンをつける
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.calendar_today),
-                    onPressed: () async {
-                      // textFieldがの値からデフォルトの日付を取得する
-                      DateTime initDate = DateTime.now();
-                      try {
-                        initDate = DateFormat('yyyy/MM/dd').parse(_date.text);
-                      } catch (_) {}
+              width: DROP_LIST_TEXT_INPUT_WIDTH,
+              child: dropdownButtonFormField_team,
+            ),
+          ),
+        ]),
+      ),
+    );
+    var groundPullDown = Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Container(
+        height: INPUT_TEXT_HEIGHT,
+        child: Row(children: [
+          const SizedBox(
+            width: LAB_WID_L,
+            child: Text(
+              '出発',
+              textAlign: TextAlign.left,
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: DROP_LIST_TEXT_INPUT_WIDTH_WIDE,
+              child: dropdownButtonFormField_ground_from,
+            ),
+          ),
+        ]),
+      ),
+    );
+    var groundPullDown_to = Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Container(
+        height: INPUT_TEXT_HEIGHT,
+        child: Row(children: [
+          const SizedBox(
+            width: LAB_WID_L,
+            child: Text(
+              '到着',
+              textAlign: TextAlign.left,
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: DROP_LIST_TEXT_INPUT_WIDTH_WIDE,
+              child: dropdownButtonFormField_ground_to,
+            ),
+          ),
+        ]),
+      ),
+    );
+    var gameListPullDown = Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Container(
+        height: INPUT_TEXT_HEIGHT,
+        child: Row(children: [
+          const SizedBox(
+            width: LAB_WID_L,
+            child: Text(
+              '試合区分',
+              textAlign: TextAlign.left,
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: DROP_LIST_TEXT_INPUT_WIDTH_WIDE,
+              child: dropdownButtonFormField_game,
+            ),
+          ),
+        ]),
+      ),
+    );
+    var dateDrumRoll = Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 0),
+      child: Container(
+        height: INPUT_TEXT_HEIGHT,
+        child: Row(
+          children: [
+            const SizedBox(
+              width: LAB_WID_L,
+              child: Text(
+                '移動日',
+                style: TextStyle(fontSize: FONT_SIZE),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: DATE_TEXT_INPUT_WIDTH,
+                child: TextField(
+                  controller: _date,
+                  textInputAction: TextInputAction.next,
+                  enabled: enabled,
+                  //initialValue: '2022/10/15',
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    //hintText: '日付',
+                    // inputの端にカレンダーアイコンをつける
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.calendar_today),
+                      onPressed: () async {
+                        // textFieldがの値からデフォルトの日付を取得する
+                        DateTime initDate = DateTime.now();
+                        try {
+                          initDate = DateFormat('yyyy/MM/dd').parse(_date.text);
+                        } catch (_) {}
 
-                      // DatePickerを表示する
-                      DateTime? picked = await showDatePicker(
-                        context: context,
-                        locale: const Locale("ja"),
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2022),
-                        lastDate: DateTime.now().add(
-                          const Duration(days: 360),
-                        ),
-                      );
+                        // DatePickerを表示する
+                        DateTime? picked = await showDatePicker(
+                          context: context,
+                          locale: const Locale("ja"),
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2022),
+                          lastDate: DateTime.now().add(
+                            const Duration(days: 360),
+                          ),
+                        );
 
-                      // DatePickerで取得した日付を文字列に変換
-                      String? formatedDate;
-                      try {
-                        formatedDate = DateFormat.yMMMEd('ja').format(picked!);
-                      } catch (_) {}
-                      if (formatedDate != null) {
-                        _date.text = formatedDate;
-                      }
-                    },
+                        // DatePickerで取得した日付を文字列に変換
+                        String? formatedDate;
+                        try {
+                          formatedDate =
+                              DateFormat.yMMMEd('ja').format(picked!);
+                        } catch (_) {}
+                        if (formatedDate != null) {
+                          _date.text = formatedDate;
+                        }
+                      },
+                    ),
+                    // labelText: 'Password',
                   ),
-                  // labelText: 'Password',
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
     var header = <Widget>[
@@ -281,7 +324,8 @@ class _ScheduleRegPageState extends State<ScheduleRegPage> {
 
 var enabled;
 String? selectedItem_t = teamItems[0];
-String? selectedItem_g = groundItems[0];
+String? selectedItem_g_from = groundItems[0];
+String? selectedItem_g_to = groundItems[0];
 String? selectedItem_game = gameItems[0];
 TextEditingController _date = TextEditingController(
     text:
@@ -290,90 +334,96 @@ TextEditingController _controller_distance = TextEditingController(text: '10');
 TextEditingController _controller_note = TextEditingController(text: '');
 
 var distanceInput = Padding(
-  padding: const EdgeInsets.all(8.0),
-  child: Row(
-    children: [
-      const SizedBox(
-        width: LAB_WID_L,
-        child: Text(
-          '片道距離',
-          style: TextStyle(fontSize: FONT_SIZE),
-          textAlign: TextAlign.left,
-        ),
-      ),
-      SizedBox(
-        width: DROP_LIST_TEXT_INPUT_WIDTH,
-        child: TextField(
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: const BorderSide(
-                color: Colors.black,
-              ),
-            ),
-            //Focusしているとき
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: const BorderSide(
-                color: Colors.blue,
-                width: 3.0,
-              ),
-            ),
-          ),
-          controller: _controller_distance,
-          style: const TextStyle(
-            fontSize: FONT_SIZE,
-            height: 1.5,
+  padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+  child: Container(
+    height: INPUT_TEXT_HEIGHT,
+    child: Row(
+      children: [
+        const SizedBox(
+          width: LAB_WID_L,
+          child: Text(
+            '片道距離',
+            style: TextStyle(fontSize: FONT_SIZE),
+            textAlign: TextAlign.left,
           ),
         ),
-      ),
-      const Padding(
-        padding: EdgeInsets.only(left: 8.0),
-        child: Text('km'),
-      ),
-    ],
+        SizedBox(
+          width: DROP_LIST_TEXT_INPUT_WIDTH,
+          child: TextField(
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: const BorderSide(
+                  color: Colors.black,
+                ),
+              ),
+              //Focusしているとき
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: const BorderSide(
+                  color: Colors.blue,
+                  width: 3.0,
+                ),
+              ),
+            ),
+            controller: _controller_distance,
+            style: const TextStyle(
+              fontSize: FONT_SIZE,
+              height: 1.5,
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(left: 8.0),
+          child: Text('km'),
+        ),
+      ],
+    ),
   ),
 );
 var scheNmInput = Padding(
-  padding: const EdgeInsets.all(8.0),
-  child: Row(
-    children: [
-      const SizedBox(
-        width: LAB_WID_L,
-        child: Text(
-          '備考',
-          style: TextStyle(fontSize: FONT_SIZE),
-          textAlign: TextAlign.left,
+  padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+  child: Container(
+    height: INPUT_TEXT_HEIGHT,
+    child: Row(
+      children: [
+        const SizedBox(
+          width: LAB_WID_L,
+          child: Text(
+            '備考',
+            style: TextStyle(fontSize: FONT_SIZE),
+            textAlign: TextAlign.left,
+          ),
         ),
-      ),
-      SizedBox(
-        width: DROP_LIST_TEXT_INPUT_WIDTH_MAXWIDE,
-        child: TextField(
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: const BorderSide(
-                color: Colors.black,
+        SizedBox(
+          width: DROP_LIST_TEXT_INPUT_WIDTH_MAXWIDE,
+          child: TextField(
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: const BorderSide(
+                  color: Colors.black,
+                ),
               ),
-            ),
 
-            //Focusしているとき
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: const BorderSide(
-                color: Colors.blue,
-                width: 3.0,
+              //Focusしているとき
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: const BorderSide(
+                  color: Colors.blue,
+                  width: 3.0,
+                ),
               ),
+              hintText: "例：さわやか一回戦 vs 〇〇",
             ),
-            hintText: "例：さわやか一回戦 vs 〇〇",
-          ),
-          controller: _controller_note,
-          style: const TextStyle(
-            fontSize: FONT_SIZE,
-            height: 1.5,
+            controller: _controller_note,
+            style: const TextStyle(
+              fontSize: FONT_SIZE,
+              height: 1.5,
+            ),
           ),
         ),
-      ),
-    ],
+      ],
+    ),
   ),
 );

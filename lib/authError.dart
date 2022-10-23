@@ -1,44 +1,79 @@
-// Firebase Authentication利用時の日本語エラーメッセージ
-const String ERRCODE_INVALID_EMAIL = "400";
-const String ERRCODE_WRONG_PASSWORD = "123123";
-const String ERRCODE_NOT_FOUND = "123123";
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Authentication_error_to_ja {
-  // ログイン時の日本語エラーメッセージ
-  login_error_msg(String error_code, String org_error_msg) {
-    String error_msg;
+enum FirebaseAuthResultStatus {
+  Successful,
+  EmailAlreadyExists,
+  WrongPassword,
+  InvalidEmail,
+  UserNotFound,
+  UserDisabled,
+  OperationNotAllowed,
+  TooManyRequests,
+  Undefined,
+}
 
-    if (error_code == ERRCODE_INVALID_EMAIL) {
-      error_msg = '有効なメールアドレスを入力してください。';
-    } else if (error_code == ERRCODE_NOT_FOUND) {
-      // 入力されたメールアドレスが登録されていない場合
-      error_msg = 'メールアドレスかパスワードが間違っています。未登録の場合、先に「アカウント作成」へ。';
-    } else if (error_code == ERRCODE_WRONG_PASSWORD) {
-      // 入力されたパスワードが間違っている場合
-      error_msg = 'メールアドレスかパスワードが間違っています。';
-    } else {
-      error_msg = org_error_msg + '[' + error_code.toString() + ']';
+class FirebaseAuthExceptionHandler {
+  static FirebaseAuthResultStatus handleException(FirebaseAuthException e) {
+    FirebaseAuthResultStatus result;
+    switch (e.code) {
+      case 'invalid-email':
+        result = FirebaseAuthResultStatus.InvalidEmail;
+        break;
+      case 'wrong-password':
+        result = FirebaseAuthResultStatus.WrongPassword;
+        break;
+      case 'user-disabled':
+        result = FirebaseAuthResultStatus.UserDisabled;
+        break;
+      case 'user-not-found':
+        result = FirebaseAuthResultStatus.UserNotFound;
+        break;
+      case 'operation-not-allowed':
+        result = FirebaseAuthResultStatus.OperationNotAllowed;
+        break;
+      case 'too-many-requests':
+        result = FirebaseAuthResultStatus.TooManyRequests;
+        break;
+      case 'email-already-exists':
+        result = FirebaseAuthResultStatus.EmailAlreadyExists;
+        break;
+      default:
+        result = FirebaseAuthResultStatus.Undefined;
     }
-
-    return error_msg;
+    return result;
   }
 
-  // アカウント登録時の日本語エラーメッセージ
-  register_error_msg(int error_code, String org_error_msg) {
-    String error_msg;
-
-    if (error_code == 360587416) {
-      error_msg = '有効なメールアドレスを入力してください。';
-    } else if (error_code == 34618382) {
-      // メールアドレスかパスワードがEmpty or Nullの場合
-      error_msg = '既に登録済みのメールアドレスです。';
-    } else if (error_code == 447031946) {
-      // メールアドレスかパスワードがEmpty or Nullの場合
-      error_msg = 'メールアドレスとパスワードを入力してください。';
-    } else {
-      error_msg = org_error_msg + '[' + error_code.toString() + ']';
+  static String exceptionMessage(FirebaseAuthResultStatus result) {
+    String? message = '';
+    switch (result) {
+      case FirebaseAuthResultStatus.Successful:
+        message = 'ログインに成功しました。';
+        break;
+      case FirebaseAuthResultStatus.EmailAlreadyExists:
+        message = '指定されたメールアドレスは既に使用されています。';
+        break;
+      case FirebaseAuthResultStatus.WrongPassword:
+        message = 'パスワードが違います。';
+        break;
+      case FirebaseAuthResultStatus.InvalidEmail:
+        message = 'メールアドレスが不正です。';
+        break;
+      case FirebaseAuthResultStatus.UserNotFound:
+        message = '指定されたユーザーは存在しません。';
+        break;
+      case FirebaseAuthResultStatus.UserDisabled:
+        message = '指定されたユーザーは無効です。';
+        break;
+      case FirebaseAuthResultStatus.OperationNotAllowed:
+        message = '指定されたユーザーはこの操作を許可していません。';
+        break;
+      case FirebaseAuthResultStatus.TooManyRequests:
+        message = '指定されたユーザーはこの操作を許可していません。';
+        break;
+      case FirebaseAuthResultStatus.Undefined:
+        message = '不明なエラーが発生しました。';
+        break;
     }
-
-    return error_msg;
+    return message;
   }
 }

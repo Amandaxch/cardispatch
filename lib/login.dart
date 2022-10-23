@@ -1,4 +1,5 @@
 import 'package:cardispatch/RegisterPage.dart';
+import 'package:cardispatch/main.dart';
 import 'package:cardispatch/mainMenu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
@@ -8,7 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
-  final String title = '';
+  //final String title = '';
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -17,21 +19,44 @@ class _LoginPageState extends State<LoginPage> {
   // メッセージ表示用
   String infoText = '';
   // 入力したメールアドレス・パスワード
-  String email = '';
-  String password = '';
+  //String email = '';
+  //String password = '';
   String userName = '';
-  final auth_error = Authentication_error_to_ja();
+  //final auth_error = Authentication_error_to_ja();
   TextStyle linkStyle = const TextStyle(color: Colors.blue, fontSize: 12);
+  Future<FirebaseAuthResultStatus> signInEmail(
+      String email, String password) async {
+    FirebaseAuthResultStatus result;
+    try {
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      print('succeed');
+      if (userCredential.user! != null) {
+        result = FirebaseAuthResultStatus.Successful;
+      } else {
+        result = FirebaseAuthResultStatus.Undefined;
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+      result = FirebaseAuthExceptionHandler.handleException(e);
+    }
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final _formKeyId = GlobalKey<FormState>();
+    final _formKeyPwd = GlobalKey<FormState>();
+
+    TextEditingController _email = new TextEditingController();
+    TextEditingController _password = new TextEditingController();
     return Scaffold(
       //drawer: NaviBar(),
       body: Center(
         child: Container(
           alignment: Alignment.center,
           width: 400,
-          height: 600,
+          height: 650,
           decoration: BoxDecoration(
             color: Colors.blue[50],
             borderRadius: BorderRadius.circular(12),
@@ -68,62 +93,68 @@ class _LoginPageState extends State<LoginPage> {
                   // メールアドレス入力
                   SizedBox(
                     width: 250,
-                    child: TextFormField(
-                      decoration: const InputDecoration(labelText: 'メールアドレス'),
-                      onChanged: (String value) {
-                        setState(() {
-                          email = value;
-                        });
-                      },
+                    child: Form(
+                      key: _formKeyId,
+                      child: TextFormField(
+                        controller: _email,
+                        decoration: const InputDecoration(labelText: 'メールアドレス'),
+                        // onChanged: (String value) {
+                        //  setState(() {
+                        //    email = value;
+                        //  });
+                        //},
+                      ),
                     ),
                   ),
                   // パスワード入力
                   SizedBox(
                     width: 250,
-                    child: TextFormField(
-                      decoration: const InputDecoration(labelText: 'パスワード'),
-                      obscureText: true,
-                      onChanged: (String value) {
-                        setState(() {
-                          password = value;
-                        });
-                      },
+                    child: Form(
+                      key: _formKeyPwd,
+                      child: TextFormField(
+                        controller: _password,
+                        decoration: const InputDecoration(labelText: 'パスワード'),
+                        obscureText: true,
+                        //onChanged: (String value) {
+                        //  setState(() {
+                        //    password = value;
+                        //  });
+                        //},
+                      ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    // メッセージ表示
-                    child: Text(infoText,
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.red)),
-                  ),
-                  Container(
-                    width: 150,
-                    // ユーザー登録ボタン
-                    child: ElevatedButton(
-                      child: const Text('ログイン'),
-                      onPressed: () async {
-                        try {
-                          // メール/パスワードでユーザ登録
-                          final FirebaseAuth auth = FirebaseAuth.instance;
-                          await auth.signInWithEmailAndPassword(
-                            email: email,
-                            password: password,
-                          );
-                          // ユーザー登録に成功した場合
-                          await Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) {
-                              return MainMenu();
-                            }),
-                          );
-                        } catch (e) {
-                          // ユーザー登録に失敗した場合
-                          setState(() {
-                            infoText = auth_error.register_error_msg(
-                                e.hashCode, e.toString());
-                          });
-                        }
-                      },
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Container(
+                      width: 150,
+                      // ユーザー登録ボタン
+                      child: ElevatedButton(
+                        child: const Text('ログイン'),
+                        onPressed: () async {
+                          _formKeyId.currentState!.validate();
+                          _formKeyPwd.currentState!.validate();
+
+                          final FirebaseAuthResultStatus signInResult =
+                              await signInEmail(_email.text, _password.text);
+                          if (signInResult !=
+                              FirebaseAuthResultStatus.Successful) {
+                            final errorMessage =
+                                FirebaseAuthExceptionHandler.exceptionMessage(
+                                    signInResult);
+
+                            _showErrorDialog(context, errorMessage);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Login successful')));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MainMenu()));
+                          }
+                        },
+                      ),
                     ),
                   ),
                   Padding(
@@ -170,4 +201,24 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+void _showErrorDialog(BuildContext context, String? message) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Text(message!),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.pop(dialogContext);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

@@ -1,3 +1,4 @@
+import 'package:cardispatch/data.dart';
 import 'package:cardispatch/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -10,7 +11,7 @@ class NaviBar extends StatelessWidget {
     return Drawer(
         child: ListView(children: [
       UserAccountsDrawerHeader(
-          accountName: const Text('早渕RF'),
+          accountName: Text(userTeamName),
           accountEmail: const Text('TEST'),
           currentAccountPicture: CircleAvatar(
               child: ClipOval(
